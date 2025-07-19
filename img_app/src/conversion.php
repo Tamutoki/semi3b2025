@@ -1,10 +1,10 @@
+<form action='?do=delete' method='POST'>
 <?php
 $tmp_file = $_FILES['upload']['tmp_name']; # 一時ファイル名
 print_r($_FILES );
 $true_file = $_FILES['upload']['name']; # 本来のファイル名
 $formatold = $_POST['formatold'];
 $format = $_POST['format'];
-$resolution = $_POST['resolution'];
 $size = $_POST['size'];
 # is_uploaded_fileメソッドで、一時的にアップロードされたファイルが本当にアップロード処理されたかの確認
 
@@ -38,23 +38,33 @@ if($formatold == 1){
     $im = null;
 }
 
+//リサイズ処理
+list($width, $height) = getimagesize($true_file);
+$newwidth = $width * ($size /100);
+$newheight = $height * ($size /100);
+
+$newImg = imagecreatetruecolor((int)$newwidth, (int)$newheight);
+imagecopyresized($newImg, $im, 0, 0, 0, 0, (int)$newwidth, (int)$newheight, $width, $height);
+echo  $width, $height, (int)$newwidth, (int)$newheight;
 if($format == 1){
     echo "JPEG形式に変換しました。";
-    imagejpeg($im, 'img/test.jpeg');
-    echo "<br><img src='img/test.jpeg' width='600'>";
-    //unlink('img/test.jpeg');
+    imagejpeg($newImg, 'img/convert.jpeg');
+    $imlink = 'img/convert.jpeg';
 }else if($format == 2){
     echo "PNG形式に変換しました。";
-    imagepng($newImg, 'img/test.png');
-    echo "<br><img src='img/test.png' width='600'>";
-    //unlink('img/test.png');
+    imagepng($newImg, 'img/convert.png');
+    $imlink = 'img/convert.png';
 }else if($format == 3){
     echo "WEBP形式に変換しました。";
-    imagewebp($im, 'img/test.webp');
-    echo "<br><img src='img/test.webp' width='600'>";
-    //unlink('img/test.webp');
+    imagewebp($newImg, 'img/convert.webp');
+    $imlink = 'img/convert.webp';
 }
+echo "<br><img src='".$imlink."' >";
+
 unset($im);
 unlink($true_file);
-
+echo "<input type='hidden' name='imgLink' value='". $imlink ."' />";
 ?>
+<br>ファイル保存が終わりましたら右のボタンから削除してください。
+<input type='submit' value='削除' />
+</form>

@@ -20,7 +20,6 @@
 </table>
 
 サイズ　　　: <input type="number" name="size" value="100"/>％<br>
-画質　　　　: <input type="number" name="resolution" value="100"/>％<br>
 
 
 <input type='submit' value='ファイル送信' />
