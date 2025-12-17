@@ -7,7 +7,7 @@
 <body>
 <?php
 
-$do = 'imgapp_window'; //ホームページ (imgapp_window)をデフォルト機能とする
+$do = 'home'; //ホームページ (imgapp_window)をデフォルト機能とする
 if (isset($_GET['do'])) {//index.php?do=に続くパラメータで実行する機能を指定
   $do = $_GET['do'];
 }
